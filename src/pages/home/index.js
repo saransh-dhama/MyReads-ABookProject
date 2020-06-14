@@ -17,7 +17,6 @@ class HomePage extends React.Component {
 	}
 	async componentDidMount() {
 		const listOfBooks = await BooksAPI.getAll();
-		console.log(listOfBooks);
 		this.setState(() => ({
 			books: listOfBooks,
 		}));
@@ -53,7 +52,7 @@ class HomePage extends React.Component {
 										<h2 className='bookshelf-title'>{shelf.name}</h2>
 										<div className='bookshelf-books'>
 											<ol className='books-grid'>
-												{this.state.books ? (
+												{this.state.books.length ? (
 													this.state.books
 														.filter((book) => book.shelf === `${shelf.id}`)
 														.map((book) => {

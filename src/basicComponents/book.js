@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 const BookComponent = ({ book, moveBookToOtherShelf, ...props }) => {
-	const [bookCollection, setCollectionValue] = useState(book.shelf);
+	const [bookCollection, setCollectionValue] = useState(
+		book.shelf ? book.shelf : 'none'
+	);
 	const updateCollection = (event) => {
 		setCollectionValue(event.target.value);
 		moveBookToOtherShelf(book, event.target.value);
@@ -14,7 +16,9 @@ const BookComponent = ({ book, moveBookToOtherShelf, ...props }) => {
 					style={{
 						width: 128,
 						height: 193,
-						backgroundImage: `url("${book.imageLinks.thumbnail}")`,
+						backgroundImage: `url("${
+							book.imageLinks && book.imageLinks.thumbnail
+						}")`,
 					}}
 				></div>
 				<div className='book-shelf-changer'>
@@ -29,11 +33,12 @@ const BookComponent = ({ book, moveBookToOtherShelf, ...props }) => {
 					</select>
 				</div>
 			</div>
-			<div className='book-title'>{book.title}</div>
+			<div className='book-title'>{book.title && book.title}</div>
 			<div className='book-authors'>
-				{book.authors.map((author) => (
-					<span key={`${book.id}${author}`}>{author} </span>
-				))}
+				{book.authors &&
+					book.authors.map((author) => (
+						<span key={`${book.id}${author}`}>{author} </span>
+					))}
 			</div>
 		</div>
 	);
