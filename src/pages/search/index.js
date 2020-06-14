@@ -10,7 +10,7 @@ class SearchPage extends React.Component {
 			books: [],
 			searchValue: '',
 		};
-		this.searchForBooks = this.searchForBooks.bind(this);
+		this.setBooksBasedOnSearch = this.setBooksBasedOnSearch.bind(this);
 		this.moveBookToOtherShelf = this.moveBookToOtherShelf.bind(this);
 	}
 	async componentDidMount() {
@@ -19,20 +19,18 @@ class SearchPage extends React.Component {
 			myBooks: listOfBooks,
 		}));
 	}
-	searchForBooks(event) {
-		const value = event.target.value;
-		this.setState(
-			{
-				searchValue: event.target.value,
-			},
-			() => {
-				if (value) {
-					BooksAPI.search(this.state.searchValue).then((books) => {
-						this.setState({ books: books });
-					});
-				}
+	setBooksBasedOnSearch(event) {
+		this.setState({ searchValue: event.target.value }, () => {
+			if (this.state.searchValue) {
+				BooksAPI.search(this.state.searchValue).then((books) => {
+					this.state.searchValue
+						? this.setState({ books: books })
+						: this.setState({ books: [] });
+				});
+			} else {
+				this.setState({ books: [] });
 			}
-		);
+		});
 	}
 	moveBookToOtherShelf(book, shelf) {
 		book.shelf = shelf;
@@ -54,7 +52,7 @@ class SearchPage extends React.Component {
 								type='text'
 								placeholder='Search by title or author'
 								value={this.state.searchValue}
-								onChange={this.searchForBooks}
+								onChange={this.setBooksBasedOnSearch}
 							/>
 						</div>
 					</div>

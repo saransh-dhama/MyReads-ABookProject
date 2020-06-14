@@ -15,6 +15,7 @@ class HomePage extends React.Component {
 		super(props);
 		this.moveBookToOtherShelf = this.moveBookToOtherShelf.bind(this);
 	}
+
 	async componentDidMount() {
 		const listOfBooks = await BooksAPI.getAll();
 		this.setState(() => ({
