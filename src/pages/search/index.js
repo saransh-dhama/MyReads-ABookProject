@@ -2,6 +2,7 @@ import React from 'react';
 import * as BooksAPI from '../../BooksAPI';
 import { withRouter } from 'react-router-dom';
 import Book from '../../basicComponents/book';
+import _ from 'lodash';
 class SearchPage extends React.Component {
 	constructor(props) {
 		super(props);
@@ -19,18 +20,26 @@ class SearchPage extends React.Component {
 			myBooks: listOfBooks,
 		}));
 	}
-	setBooksBasedOnSearch(event) {
-		this.setState({ searchValue: event.target.value }, () => {
-			if (this.state.searchValue) {
-				BooksAPI.search(this.state.searchValue).then((books) => {
-					this.state.searchValue
-						? this.setState({ books: books })
-						: this.setState({ books: [] });
-				});
-			} else {
-				this.setState({ books: [] });
-			}
-		});
+	onChangeHandler = (event) => {
+		this.setState({ searchValue: event.target.value });
+		event.persist();
+		if (!this.debouncedFn) {
+			this.debouncedFn = _.debounce(() => {
+				let searchString = event.target.value;
+				this.setBooksBasedOnSearch(searchString);
+			}, 300);
+		}
+		this.debouncedFn();
+	};
+
+	setBooksBasedOnSearch(value) {
+		if (value) {
+			BooksAPI.search(value).then((books) => {
+				this.setState({ books: books });
+			});
+		} else {
+			this.setState({ books: [] });
+		}
 	}
 	moveBookToOtherShelf(book, shelf) {
 		book.shelf = shelf;
@@ -52,7 +61,7 @@ class SearchPage extends React.Component {
 								type='text'
 								placeholder='Search by title or author'
 								value={this.state.searchValue}
-								onChange={this.setBooksBasedOnSearch}
+								onChange={this.onChangeHandler}
 							/>
 						</div>
 					</div>
