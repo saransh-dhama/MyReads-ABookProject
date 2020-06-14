@@ -46,6 +46,7 @@ body {
 	}
 }
 
-.open-Search {
+.open-Search button,
+.close-search {
 	cursor: pointer;
 }

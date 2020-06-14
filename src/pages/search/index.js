@@ -28,7 +28,6 @@ class SearchPage extends React.Component {
 			() => {
 				if (value) {
 					BooksAPI.search(this.state.searchValue).then((books) => {
-						console.log(books);
 						this.setState({ books: books });
 					});
 				}
@@ -63,10 +62,17 @@ class SearchPage extends React.Component {
 						<ol className='books-grid'>
 							{this.state.books.length > 1 ? (
 								this.state.books.map((book) => {
+									let bookdata = book;
+									const bookOnShelf = this.state.myBooks.find(
+										(myBook) => book.id === myBook.id
+									);
+									if (bookOnShelf) {
+										bookdata = bookOnShelf;
+									}
 									return (
-										<li key={book.id}>
+										<li key={bookdata.id}>
 											<Book
-												book={book}
+												book={bookdata}
 												moveBookToOtherShelf={this.moveBookToOtherShelf}
 											/>
 										</li>

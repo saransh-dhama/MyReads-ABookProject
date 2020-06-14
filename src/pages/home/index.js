@@ -22,7 +22,6 @@ class HomePage extends React.Component {
 		}));
 	}
 	moveBookToOtherShelf(book, shelf) {
-		console.log(book, shelf);
 		book.shelf = shelf;
 		this.setState(
 			(previousState) => {
